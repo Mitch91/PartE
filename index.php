@@ -76,7 +76,7 @@
             </div>
             
             <div>
-                <?php echo $error_msg; ?>
+                <?php if(isset($_GET['error_msg'])) echo $_GET['error_msg']; ?>
             </div>
         </form>
     </body>

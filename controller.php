@@ -8,15 +8,30 @@
         for($i = 0; $i < count($values); $i++){
             echo "<option value = " . $values[$i] . ">$values[$i]</option>\n";
         }
-        
     }
     
     function validate_query($query_array){
         global $error_msg;
+        
+        if(intval($query_array['from_year']) > intval($query_array['to_year'])){
+            $error_msg = "The from year must be less than or equal to the to year.";
+        } elseif(intval($query_array['min_stock']) <= 0 && $query_array['min_stock'] != ""){
+            $error_msg = "Minimum stock must be a positive integer.";
+        } elseif(intval($query_array['min_ordered']) <= 0 && $query_array['min_ordered'] != ""){
+            $error_msg = "Minimum ordered must be a positive integer.";
+        } elseif(intval($query_array['min_cost']) <= 0 && $query_array['min_cost'] != ""){
+            $error_msg = "Minimum cost must be a positive integer.";
+        } elseif((intval($query_array['min_cost']) > intval($query_array['max_cost'])
+                 || intval($query_array['max_cost']) <= 0)
+                 && $query_array['max_cost'] != ""){
+            $error_msg = "Maximum cost must be an integer greater " .
+                          "than or equal to minimum cost. If minimum cost" .
+                          " isn't specified, maximum cost must be greater than zero.";
+        }
         return $error_msg == "";
     }
     
-    if(count($_GET) != 0){
+    if(count($_GET) == 11){
         if(validate_query($_GET))
             get_results($_GET);
     }
