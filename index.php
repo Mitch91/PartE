@@ -1,8 +1,12 @@
+<?php
+    require_once('controller.php');
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Wine Store Database</title>
+        <title>Wine Store Database Query Page</title>
         <style>
             div {margin-top:20px;}
         </style>
@@ -22,28 +26,28 @@
             <div>
                 Region:
                 <select name = "region">
-                    <option value = "default" selected>Select a Region</option>
+                    <?php echo_options_for_field('region'); ?>
                 </select>
             </div>
             
             <div>
                 Grape Variety:
                 <select name = "grape">
-                    <option value = "default" selected>Select a Grape Variety</option>
+                    <?php echo_options_for_field('grape') ?>
                 </select>
             </div>
             
             <div>
                 From:
                 <select name = "from_year">
-                    <option value = "default" selected>Select a Year</option>
+                    <?php echo_options_for_field('year') ?>
                 </select>
             </div>
             
             <div>
                 To:
                 <select name = "to_year">
-                    <option value = "default" selected>Select a Year</option>
+                    <?php echo_options_for_field('year') ?>
                 </select>
             </div>
             
@@ -58,7 +62,21 @@
             </div>
             
             <div>
-                <input type = "submit" value = "Submit" />
+                Minimum Cost:
+                <input type = "text" name = "min_cost" />
+            </div>
+            
+            <div>
+                Maximum Cost:
+                <input type = "text" name = "max_cost" />
+            </div>
+            
+            <div>
+                <input type = "submit" value = "Submit" name = "submit"/>
+            </div>
+            
+            <div>
+                <?php echo $error_msg; ?>
             </div>
         </form>
     </body>
