@@ -5,5 +5,4 @@
         exit;
     }
     
-    echo 'Connected to database ' . DB_NAME;
 ?>
