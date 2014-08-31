@@ -32,5 +32,31 @@
     
     function get_results($query_array){
         global $dbconn;
+        global $query_result;
+        $i = 0;
+        
+        $select_clause = "SELECT wine_name, variety, year, winery_name, region_name, cost, on_hand, SUM(qty), SUM(price) ";
+        
+        $from_clause = "FROM wine, wine_variety, grape_variety, winery, region, inventory, items ";
+        
+        $where_clause = "WHERE wine.wine_id = wine_variety.wine_id " .
+                        "AND wine_variety.variety_id = grape_variety.variety_id " .
+                        "AND wine.winery_id = winery.winery_id " .
+                        "AND winery.region_id = region.region_id " .
+                        "AND wine.wine_id = inventory.wine_id " .
+                        "AND wine.wine_id = items.wine_id ";
+        
+        $group_by_clause = "GROUP BY wine.wine_id, grape_variety.variety_id ";
+        
+        $order_by_clause = "ORDER BY wine.wine_id;";
+        
+        $query = $select_clause .
+                 $from_clause .
+                 $where_clause .
+                 $group_by_clause .
+                 $order_by_clause;
+        $result = mysqli_query($dbconn, $query);
+        while($row = mysqli_fetch_array($result))
+            $query_result[$i++] = $row;
     }
 ?>

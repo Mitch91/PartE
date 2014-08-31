@@ -32,8 +32,8 @@
         <?php
                 for($i = 0; $i < count($query_result); $i++){
                     echo "<tr>\n";
-                    foreach ($query_result[$i] as $field => $value){
-                        echo "<td>" . $value . "</td>\n";
+                    for($j = 0; $j < count($query_result[$i]) / 2; $j++){
+                        echo "<td>" . $query_result[$i][$j] . "</td>\n";
                     }
                     echo "</tr>\n";
                 }
