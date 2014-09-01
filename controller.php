@@ -1,6 +1,9 @@
 <?php
     require_once('model.php');
     
+    $mini_templator = new MiniTemplator;
+    $query_templator->readTemplateFromFile("index.php");
+    
     $error_msg = "";
     
     function echo_options_for_field($field){
@@ -12,6 +15,7 @@
     
     function validate_query($query_array){
         global $error_msg;
+        global $query_templator;
         
         if(intval($query_array['from_year']) > intval($query_array['to_year'])
             && $query_array['from_year'] != "default" 
@@ -30,6 +34,9 @@
                           "than or equal to minimum cost. If minimum cost" .
                           " isn't specified, maximum cost must be greater than zero.";
         }
+        
+        $query_templator->setVariable("error_msg", $error_msg);
+        $query_templator->addBlock("error_msg");
         return $error_msg == "";
     }
     

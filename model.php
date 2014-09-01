@@ -1,6 +1,7 @@
 <?php
     require_once('db.php');
     require_once('config.php');
+    require_once ("MiniTemplator.class.php"); 
     
     $query_result = array();
     if(!$dbconn = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME)){
