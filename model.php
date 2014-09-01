@@ -16,7 +16,7 @@
         } elseif($field == 'region'){
             $query = "SELECT region_name FROM region";
         } else{
-            // $field == 'year'
+            // $field == 'to_year' || 'from_year'
             $query = "SELECT DISTINCT year FROM wine ORDER BY year DESC";
         }
         

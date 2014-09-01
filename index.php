@@ -1,18 +1,8 @@
 <?php
     require_once('model.php');
     
-    $mini_templator = new MiniTemplator;
-    $query_templator->readTemplateFromFile("index.php");
-    
     $error_msg = "";
-    
-    function echo_options_for_field($field){
-        $values = get_values_of_field($field);
-        for($i = 0; $i < count($values); $i++){
-            echo "<option value = \"$values[$i]\">$values[$i]</option>\n";
-        }
-    }
-    
+
     function validate_query($query_array){
         global $error_msg;
         global $query_templator;
@@ -43,5 +33,24 @@
     if(count($_GET) == 11){
         if(validate_query($_GET))
             get_results($_GET);
+    }
+    
+    $query_templator = new MiniTemplator;
+    $query_templator->readTemplateFromFile("search.html");
+    
+    populate_dropdown_for_field("region");
+    populate_dropdown_for_field("grape");
+    populate_dropdown_for_field("from_year");
+    populate_dropdown_for_field("to_year");
+    
+    $query_templator->generateOutput();
+    function populate_dropdown_for_field($field){
+        global $query_templator;
+        
+        $values = get_values_of_field($field);
+        for($i = 0; $i < count($values); $i++){
+            $query_templator->setVariable($field, $values[$i]);
+            $query_templator->addBlock($field);
+        }
     }
 ?>
