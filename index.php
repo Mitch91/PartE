@@ -36,7 +36,7 @@
     }
     
     $query_templator = new MiniTemplator;
-    $query_templator->readTemplateFromFile("search.html");
+    $query_templator->readTemplateFromFile("search_template.html");
     
     populate_dropdown_for_field("region");
     populate_dropdown_for_field("grape");
