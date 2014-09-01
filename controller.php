@@ -6,14 +6,16 @@
     function echo_options_for_field($field){
         $values = get_values_of_field($field);
         for($i = 0; $i < count($values); $i++){
-            echo "<option value = " . $values[$i] . ">$values[$i]</option>\n";
+            echo "<option value = \"$values[$i]\">$values[$i]</option>\n";
         }
     }
     
     function validate_query($query_array){
         global $error_msg;
         
-        if(intval($query_array['from_year']) > intval($query_array['to_year'])){
+        if(intval($query_array['from_year']) > intval($query_array['to_year'])
+            && $query_array['from_year'] != "default" 
+            && $query_array['to_year'] != "default"){
             $error_msg = "The from year must be less than or equal to the to year.";
         } elseif(intval($query_array['min_stock']) <= 0 && $query_array['min_stock'] != ""){
             $error_msg = "Minimum stock must be a positive integer.";

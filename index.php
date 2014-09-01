@@ -40,13 +40,15 @@
             <div>
                 From:
                 <select name = "from_year">
+                    <option value = "default" selected>Select a Year</option>
                     <?php echo_options_for_field('year') ?>
                 </select>
             </div>
             
             <div>
                 To:
-                <select name = "to_year">
+                <select name = "to_year" >
+                    <option value = "default" selected>Select a Year</option>
                     <?php echo_options_for_field('year') ?>
                 </select>
             </div>
