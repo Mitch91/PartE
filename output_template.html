@@ -1,8 +1,3 @@
-<?php
-    require_once('controller.php');
-    if($error_msg != "") header('Location: index.php?error_msg='. $error_msg);
-?>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,37 +9,33 @@
     </head>
     <body>
         <a href = "index.php">Return to Form</a>
-        <?php 
-            if(count($query_result) != 0){
-        ?>
-            <table>
-                <tr>
-                    <td>Wine</td>
-                    <td>Variety</td>
-                    <td>Year</td>
-                    <td>Winery</td>
-                    <td>Region</td>
-                    <td>Cost</td>
-                    <td> Available</td>
-                    <td>Stock Sold</td>
-                    <td>Sales Revenues</td>
-                </tr>
-        <?php
-                for($i = 0; $i < count($query_result); $i++){
-                    echo "<tr>\n";
-                    for($j = 0; $j < count($query_result[$i]) / 2; $j++){
-                        echo "<td>" . $query_result[$i][$j] . "</td>\n";
-                    }
-                    echo "</tr>\n";
-                }
-        ?>
-            </table>
-        <?php 
-            } else{ 
-        ?>
-            There were no wines that fit your criteria
-        <?php 
-            } 
-        ?>
+        
+        <!-- $BeginBlock no_results -->
+        <span>There were no wines that fit your criteria</span>
+        <!-- $EndBlock no_result -->
+        
+        <!-- $BeginBlock yes_results -->
+        <table>
+            <tr>
+                <td>Wine</td>
+                <td>Variety</td>
+                <td>Year</td>
+                <td>Winery</td>
+                <td>Region</td>
+                <td>Cost</td>
+                <td> Available</td>
+                <td>Stock Sold</td>
+                <td>Sales Revenues</td>
+            </tr>
+            
+            <!-- $BeginBlock record -->
+            <tr>
+                <!-- $BeginBlock value -->
+                <td>${value}</td>
+                <!-- $EndBlock value -->
+            </tr>
+            <!-- $EndBlock record -->
+        </table>
+        <!-- $EndBlock yes_results -->
     </body>
 </html>
