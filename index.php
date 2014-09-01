@@ -3,9 +3,8 @@
     
     $error_msg = "";
 
-    function validate_query($query_array){
+    function validate_query($query_array, $templator){
         global $error_msg;
-        global $query_templator;
         
         if(intval($query_array['from_year']) > intval($query_array['to_year'])
             && $query_array['from_year'] != "default" 
@@ -25,25 +24,11 @@
                           " isn't specified, maximum cost must be greater than zero.";
         }
         
-        $query_templator->setVariable("error_msg", $error_msg);
-        $query_templator->addBlock("error_msg");
+        $templator->setVariable("error_msg", $error_msg);
+        $templator->addBlock("error_msg");
         return $error_msg == "";
     }
     
-    if(count($_GET) == 11){
-        if(validate_query($_GET))
-            get_results($_GET);
-    }
-    
-    $query_templator = new MiniTemplator;
-    $query_templator->readTemplateFromFile("search_template.html");
-    
-    populate_dropdown_for_field("region");
-    populate_dropdown_for_field("grape");
-    populate_dropdown_for_field("from_year");
-    populate_dropdown_for_field("to_year");
-    
-    $query_templator->generateOutput();
     function populate_dropdown_for_field($field){
         global $query_templator;
         
@@ -52,5 +37,39 @@
             $query_templator->setVariable($field, $values[$i]);
             $query_templator->addBlock($field);
         }
+    }
+    
+    function display_results($results){
+        $results_templator = new MiniTemplator;
+        $results_templator->readTemplateFromFile("output_template.html");
+        
+        if(count($results) == 0){ 
+            $results_templator->addBlock("no_results");
+        } else{
+            for($i = 0; $i < count($results); $i++){
+                for($j = 0; $j < count($results[$i]) / 2; $j++){
+                    $results_templator->setVariable("value", $results[$i][$j]);
+                    $results_templator->addBlock("value");
+                }
+                $results_templator->addBlock("record");
+            }
+            $results_templator->addBlock("yes_results");
+            $results_templator->generateOutput();
+        }
+    }
+    
+    $query_templator = new MiniTemplator;
+    $query_templator->readTemplateFromFile("search_template.html");
+    
+    if(count($_GET) == 11 && validate_query($_GET, $query_templator)){
+        $results = get_results($_GET);
+        display_results($results);
+    } else{
+        populate_dropdown_for_field("region");
+        populate_dropdown_for_field("grape");
+        populate_dropdown_for_field("from_year");
+        populate_dropdown_for_field("to_year");
+        
+        $query_templator->generateOutput();
     }
 ?>
