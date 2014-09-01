@@ -3,7 +3,6 @@
     require_once('config.php');
     require_once ("MiniTemplator.class.php"); 
     
-    $query_result = array();
     if(!$dbconn = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME)){
         echo 'Could not connect to mysql database ' . DB_NAME . ' on ' . DB_HOST . '\n';
         exit;
@@ -33,7 +32,7 @@
     
     function get_results($query_array){
         global $dbconn;
-        global $query_result;
+        $query_result = array();
         $i = 0;
         
         $select_clause = "SELECT wine_name, variety, year, winery_name, region_name, cost, on_hand, SUM(qty) AS num_sold, SUM(price) AS revenue ";
@@ -98,5 +97,7 @@
         $result = mysqli_query($dbconn, $query);
         while($row = mysqli_fetch_array($result))
             $query_result[$i++] = $row;
+            
+        return $query_result;
     }
 ?>
