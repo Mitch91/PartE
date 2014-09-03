@@ -1,6 +1,65 @@
 <?php
     require_once('model.php');
+    session_start();
+    
+    if(isset($_GET['end']) && isset($_SESSION['started'])){
+        session_destroy();
+        header('Location: index.php');
+    }
+    
+    $results_templator = new MiniTemplator;
+    $results_templator->readTemplateFromFile("output_template.html");
 
+    // has session
+    if(isset($_SESSION['started'])){
+        $results_templator->setVariable("href", "?end");
+        $results_templator->setVariable("text", "End Session");
+        $results_templator->addBlock("link");
+        
+        $results_templator->setVariable("href", "?other");
+        if($_SESSION['last_page'] == "results"){
+            $results_templator->setVariable("text", "Last Query");
+            $_SESSION['last_page'] = "session";
+            
+            if($_SESSION['new_query']){
+                foreach($_SESSION['last_query'] as $row){
+                    array_push($_SESSION['wine_list'], $row); 
+                }
+                $_SESSION['new_query'] = false;
+            }
+            
+            $results = $_SESSION['wine_list'];
+        }else{
+            // == "session" || "search"
+            $results_templator->setVariable("text", 
+                "Wines viewed this session");
+            
+            if($_SESSION['last_page'] == "search"){
+                if(!validate_query($_GET))
+                    header('Location: index.php?error_msg='. $error_msg);
+            
+                $results = get_results($_GET);
+                $_SESSION['last_query'] = $results;
+                
+            } else{
+                $results = $_SESSION['last_query'];
+            }
+            
+            $_SESSION['last_page'] = "results";
+        }
+        $results_templator->addBlock("link");
+        display_results($results); 
+    } else{
+        // no session
+        if(!validate_query($_GET))
+            header('Location: index.php?error_msg='. $error_msg);
+            
+        $results = get_results($_GET);
+        display_results($results);
+    }
+    
+
+    
     $error_msg = "";
 
     function validate_query($query_array){
@@ -27,8 +86,7 @@
     }
     
     function display_results($results){
-        $results_templator = new MiniTemplator;
-        $results_templator->readTemplateFromFile("output_template.html");
+        global $results_templator;
         
         if(count($results) == 0){ 
             $results_templator->addBlock("no_results");
@@ -44,12 +102,5 @@
             $results_templator->generateOutput();
         }
     }
-
-    if(validate_query($_GET)){
-        $results = get_results($_GET);
-        display_results($results);
-    } else{
-        header('Location: index.php?error_msg='. $error_msg);
-    }
-   
+    
 ?>

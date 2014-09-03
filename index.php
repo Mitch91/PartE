@@ -1,5 +1,14 @@
 <?php
     require_once('model.php');
+    session_start();
+    
+    $_SESSION['last_page'] = "search";
+    $_SESSION['new_query'] = true;
+    
+    if(isset($_GET['start']) && !isset($_SESSION['started'])){
+        $_SESSION['started'] = true;
+        $_SESSION['wine_list'] = array();
+    }
     
     function populate_dropdown_for_field($field){
         global $query_templator;
