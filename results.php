@@ -12,15 +12,18 @@
 
     // has session
     if(isset($_SESSION['started'])){
+        // add link to end session
         $results_templator->setVariable("href", "?end");
         $results_templator->setVariable("text", "End Session");
         $results_templator->addBlock("link");
         
+        // add link to swap between results of last query and wines this session
         $results_templator->setVariable("href", "?other");
         if($_SESSION['last_page'] == "results"){
             $results_templator->setVariable("text", "Last Query");
             $_SESSION['last_page'] = "session";
             
+            // add new query to the session's list of wines
             if($_SESSION['new_query']){
                 foreach($_SESSION['last_query'] as $row){
                     array_push($_SESSION['wine_list'], $row); 
@@ -34,7 +37,7 @@
             $results_templator->setVariable("text", 
                 "Wines viewed this session");
             
-            
+            // if the last page was the search page, validate
             if($_SESSION['last_page'] == "search"){
                 if(!validate_query($_GET))
                     header('Location: index.php?error_msg='. $error_msg);
@@ -45,23 +48,26 @@
             } else{
                 $results = $_SESSION['last_query'];
             }
-            
-            $results_templator->setVariable("wine_list", get_wine_names($results));
-            $results_templator->addBlock("twitter");
-            
             $_SESSION['last_page'] = "results";
         }
         $results_templator->addBlock("link");
-        display_results($results); 
+        
     } else{
         // no session
         if(!validate_query($_GET))
             header('Location: index.php?error_msg='. $error_msg);
             
         $results = get_results($_GET);
-        display_results($results);
     }
     
+    // add the tweet button for the wine list
+    $results_templator->setVariable("wine_list", get_wine_names($results));
+    $results_templator->addBlock("twitter");
+    
+    // display the list
+    display_results($results); 
+    
+    // gets the list of wine names seperated by commas, up to 140 characters
     function get_wine_names($results){
         $wine_list = "";
         $char_count = 0;
@@ -74,6 +80,7 @@
     
     $error_msg = "";
 
+    // Validate the query
     function validate_query($query_array){
         global $error_msg;
         
@@ -97,6 +104,9 @@
         return $error_msg == "";
     }
     
+    /* Displays the array $results as a table or displays 
+     * a message that there are no results for the criteria
+     */
     function display_results($results){
         global $results_templator;
         

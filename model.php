@@ -3,11 +3,15 @@
     require_once('config.php');
     require_once ("MiniTemplator.class.php"); 
     
+    // connect to the DB
     if(!$dbconn = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME)){
         echo 'Could not connect to mysql database ' . DB_NAME . ' on ' . DB_HOST . '\n';
         exit;
     }
     
+    /* Gets the possible values for the respective 
+     * field and returns it as an array.
+     */
     function get_values_of_field($field){
         $query = "";
         if($field == 'grape'){
@@ -30,6 +34,10 @@
         return $values;
     }
     
+    /* Given $query_array is just $_GET, so the function just
+     * builds the query given the user's search parameters and
+     * returns the results as an array.
+     */
     function get_results($query_array){
         global $dbconn;
         $query_result = array();
