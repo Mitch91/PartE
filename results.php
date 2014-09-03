@@ -34,6 +34,7 @@
             $results_templator->setVariable("text", 
                 "Wines viewed this session");
             
+            
             if($_SESSION['last_page'] == "search"){
                 if(!validate_query($_GET))
                     header('Location: index.php?error_msg='. $error_msg);
@@ -44,6 +45,9 @@
             } else{
                 $results = $_SESSION['last_query'];
             }
+            
+            $results_templator->setVariable("wine_list", get_wine_names($results));
+            $results_templator->addBlock("twitter");
             
             $_SESSION['last_page'] = "results";
         }
@@ -58,7 +62,15 @@
         display_results($results);
     }
     
-
+    function get_wine_names($results){
+        $wine_list = "";
+        $char_count = 0;
+        foreach($results as $wine){
+            if(($char_count += strlen($wine[0]) + 2) > 140) break;
+            $wine_list .= $wine[0] . ", ";
+        }
+        return $wine_list;
+    }
     
     $error_msg = "";
 
